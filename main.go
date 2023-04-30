@@ -3,10 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
+	"github.com/fyoussef/scafolding.git/helpers"
 )
 
 func main() {
@@ -21,17 +22,27 @@ func main() {
 
 	commands := string(line[:])
 
-	file, err := os.Create(commands + ".ts")
+	args := strings.Fields(commands)
+
+	template := templates(args[1])
+
+	name := args[2]
+
+	if name == "" {
+		log.Fatal("Filename has missing")
+	}
+
+	filename := name + template.sufix
+	file, err := os.Create(filename + ".ts")
 
 	if err != nil {
 		fmt.Println("Error on create file:", err)
 	}
 	defer file.Close()
 
-	title := cases.Title(language.Und, cases.NoLower)
-	filename := title.String(commands)
+	className := helpers.Capitalize(name)
 
-	_, err = file.WriteString(fmt.Sprintf("export class %s {}", filename))
+	_, err = file.WriteString(fmt.Sprintf("export class %s {}", className+template.name))
 
 	if err != nil {
 		fmt.Println("Error on write file:", err)
@@ -44,4 +55,20 @@ func main() {
 	}
 
 	fmt.Println("File created", filename)
+}
+
+type Template struct {
+	name  string
+	sufix string
+}
+
+func templates(fileType string) *Template {
+	template := Template{}
+	switch fileType {
+	case "uc":
+		template.sufix = "-usecase"
+		template.name = "UseCase"
+	}
+
+	return &template
 }
