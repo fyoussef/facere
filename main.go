@@ -24,51 +24,18 @@ func main() {
 
 	args := strings.Fields(commands)
 
-	template := templates(args[1])
+	path := args[2]
 
-	name := args[2]
-
-	if name == "" {
+	if path == "" {
 		log.Fatal("Filename has missing")
 	}
 
-	filename := name + template.sufix
-	file, err := os.Create(filename + ".ts")
+	template := helpers.Templates(args[1])
 
-	if err != nil {
-		fmt.Println("Error on create file:", err)
-	}
-	defer file.Close()
+	helpers.CreateFile(path, template)
 
-	className := helpers.Capitalize(name)
+	// className := helpers.Capitalize(path)
 
-	_, err = file.WriteString(fmt.Sprintf("export class %s {}", className+template.name))
+	// _, err = file.WriteString(fmt.Sprintf("export class %s {}", className+template.name))
 
-	if err != nil {
-		fmt.Println("Error on write file:", err)
-	}
-
-	err = file.Sync()
-
-	if err != nil {
-		fmt.Println("Error on save file:", err)
-	}
-
-	fmt.Println("File created", filename)
-}
-
-type Template struct {
-	name  string
-	sufix string
-}
-
-func templates(fileType string) *Template {
-	template := Template{}
-	switch fileType {
-	case "uc":
-		template.sufix = "-usecase"
-		template.name = "UseCase"
-	}
-
-	return &template
 }
