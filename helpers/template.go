@@ -8,7 +8,6 @@ import (
 type Template struct {
 	Name  string
 	Sufix string
-	Type  string
 }
 
 func Templates(fileType string) *Template {
@@ -32,6 +31,12 @@ func Templates(fileType string) *Template {
 	case "repository":
 		template.Sufix = ".repository"
 		template.Name = "Repository"
+	case "itf":
+		template.Sufix = ".interface"
+		template.Name = ""
+	case "interface":
+		template.Sufix = ".interface"
+		template.Name = ""
 	}
 
 	return &template
@@ -40,11 +45,22 @@ func Templates(fileType string) *Template {
 func TemplateContent(templateType, templateName string) (string, error) {
 	templateName = Capitalize(templateName)
 
-	if templateType == "class" {
-		return fmt.Sprintf("export class %s {}", templateName), nil
-	} else if templateType == "interface" {
-		return fmt.Sprintf("export interface I%s {}", templateName), nil
+	classTemplates := []string{"uc", "usecase", "ent", "entity"}
+	itfTemplates := []string{"itf", "interface"}
+
+	isClassTemplace := Contains(classTemplates, templateType)
+	isItfTemplate := Contains(itfTemplates, templateType)
+
+	if !isClassTemplace && !isItfTemplate {
+		return "", errors.New("Unsupported template type")
 	}
 
-	return "", errors.New("Unsupported template type")
+	if isClassTemplace {
+		return fmt.Sprintf("export class %s {}", templateName), nil
+	} else if isItfTemplate {
+		return fmt.Sprintf("export interface I%s {}", templateName), nil
+	} else {
+		return "", errors.New("Template not found")
+	}
+
 }
