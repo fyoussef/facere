@@ -34,8 +34,4 @@ func main() {
 
 	helpers.CreateFile(path, template)
 
-	// className := helpers.Capitalize(path)
-
-	// _, err = file.WriteString(fmt.Sprintf("export class %s {}", className+template.name))
-
 }

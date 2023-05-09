@@ -12,13 +12,13 @@ func CreateFile(path string, template *Template) *os.File {
 	directories := strings.Split(path, "/")
 	totalItems := len(directories)
 	filename := directories[totalItems-1]
-	pathWithNoFile := directories[:totalItems-1]
+	pathWithoutFile := directories[:totalItems-1]
 
 	className := Capitalize(filename)
 
 	createdDirs := ""
 
-	for _, directory := range pathWithNoFile {
+	for _, directory := range pathWithoutFile {
 		createdDirs = createdDirs + directory + "/"
 		if _, err := os.Stat(createdDirs); os.IsNotExist(err) {
 			if err = os.Mkdir(createdDirs, os.ModePerm); err != nil {
@@ -26,16 +26,22 @@ func CreateFile(path string, template *Template) *os.File {
 			}
 		}
 	}
+
 	filename = filename + template.Sufix + ".ts"
+
 	file, err := os.Create(createdDirs + filename)
+
 	if err != nil {
 		fmt.Println("Error on create file:", err)
 	}
 	defer file.Close()
+
 	_, err = file.WriteString(fmt.Sprintf("export class %s {}", className+template.Name))
+
 	if err != nil {
 		log.Fatal("Error to write file", err)
 	}
+
 	file.Sync()
 	return file
 }
