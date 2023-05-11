@@ -14,7 +14,7 @@ func CreateFile(path string, template *Template) *os.File {
 	filename := directories[totalItems-1]
 	pathWithoutFile := directories[:totalItems-1]
 
-	className := Capitalize(filename)
+	name := Capitalize(filename)
 
 	createdDirs := ""
 
@@ -36,7 +36,13 @@ func CreateFile(path string, template *Template) *os.File {
 	}
 	defer file.Close()
 
-	_, err = file.WriteString(fmt.Sprintf("export class %s {}", className+template.Name))
+	content, err := TemplateContent(template.Type, name+template.Name)
+
+	if err != nil {
+		log.Fatal("Error get template content", err)
+	}
+
+	_, err = file.WriteString(content)
 
 	if err != nil {
 		log.Fatal("Error to write file", err)
