@@ -16,7 +16,7 @@ var facereCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 Available templates to create:
 	%s
-	| usecase        | us   | 
+	| usecase        | uc   | 
 	|                |      |
 	| entity         | ent  |
 	|                |      |
