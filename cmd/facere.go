@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/fyoussef/scafolding.git/colors"
 	"github.com/fyoussef/scafolding.git/helpers"
@@ -29,6 +30,7 @@ Attention: The /src directory will be created automaticly in first command and a
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if len(args) < 2 {
+			log.Println("See available commands using facere -h")
 			return
 		}
 
@@ -43,6 +45,7 @@ Attention: The /src directory will be created automaticly in first command and a
 func Execute() {
 	if err := facereCmd.Execute(); err != nil {
 		log.Fatal("Erro to execute facere", err)
+		os.Exit(1)
 	}
 }
 
