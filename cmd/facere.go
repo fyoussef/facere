@@ -27,6 +27,11 @@ Attention: The /src directory will be created automaticly in first command and a
 `, colors.Blue, colors.Reset),
 	Example: "  facere [usecase] [usecase/filename]",
 	Run: func(cmd *cobra.Command, args []string) {
+
+		if len(args) < 2 {
+			return
+		}
+
 		template := helpers.Templates(args[0])
 		path := args[1]
 

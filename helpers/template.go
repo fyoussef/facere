@@ -55,7 +55,7 @@ func TemplateContent(templateType, templateName string) (string, error) {
 	templateName = Capitalize(templateName)
 
 	if templateType != "class" && templateType != "interface" {
-		return "", errors.New("Unsupported template type")
+		return "", errors.New("Invalid template.")
 	}
 
 	if templateType == "class" {

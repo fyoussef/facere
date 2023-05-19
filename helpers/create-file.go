@@ -23,29 +23,33 @@ func CreateFile(path string, template *Template) *os.File {
 		if _, err := os.Stat(createdDirs); os.IsNotExist(err) {
 			if err = os.Mkdir(createdDirs, os.ModePerm); err != nil {
 				log.Fatal("Error to create directory", err)
+				os.Exit(1)
 			}
 		}
 	}
 
 	filename = filename + template.Sufix + ".ts"
 
+	content, err := TemplateContent(template.Type, name+template.Name)
+
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
 	file, err := os.Create(createdDirs + filename)
 
 	if err != nil {
 		fmt.Println("Error on create file:", err)
+		os.Exit(1)
 	}
 	defer file.Close()
-
-	content, err := TemplateContent(template.Type, name+template.Name)
-
-	if err != nil {
-		log.Fatal("Error get template content", err)
-	}
 
 	_, err = file.WriteString(content)
 
 	if err != nil {
 		log.Fatal("Error to write file", err)
+		os.Exit(1)
 	}
 
 	file.Sync()
