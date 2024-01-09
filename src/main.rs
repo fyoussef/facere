@@ -1,33 +1,46 @@
-use std::{fs, fmt::Error};
+mod utils;
+
+use std::{
+    fs,
+    io::{self, Write},
+};
 
 fn main() {
-    let test_path = "./my/path";
+    utils::clear_terminal();
+    print!("Please, enter your path: ");
+    let _ = io::stdout().flush();
 
-    create_dirs(test_path); 
+    let mut path = String::new();
+    let _ = io::stdin().read_line(&mut path).unwrap();
 
-    let file_exists = file_exists(test_path);
+    let recipient = mount_dest(&path);
+
+    utils::create_dirs(&recipient.path);
+
+    let file_exists = utils::file_exists(&recipient.path);
     match file_exists {
-        Err(_) => println!("The file already exists. If you continue the existing file will be removed."),
-        _ => ()
+        Err(_) => {
+            println!("The file already exists. If you continue the existing file will be removed.")
+        }
+        _ => (),
     };
 
-    let all = format!("{}/{}", test_path, "text.ts");
+    let all = format!("{}/{}.{}", &recipient.path, &recipient.filename, "ts");
 
-    fs::write(all, "console.log()").unwrap();
+    fs::write(all, "").unwrap();
 }
 
-fn create_dirs(path: &str) {
-    let path_err = fs::create_dir_all(path);
-    match path_err {
-        Err(err) => println!("Errou ao criar os diretórios: {}", err),
-        _ => ()
-    };
+struct Recipient {
+    filename: String,
+    path: String,
 }
 
-fn file_exists(path: &str) -> Result<(), Error> {
-    let exists = fs::metadata(path);
-    match exists {
-        Err(_) => panic!("The file <file_name> does not exists"),
-        _ => Ok(())
+fn mount_dest(path: &str) -> Recipient {
+    let mut split_path: Vec<&str> = path.split('/').collect();
+    let filename = split_path.pop().unwrap();
+
+    Recipient {
+        filename: filename.to_string(),
+        path: path.to_string().replace(filename, ""),
     }
 }
