@@ -1,9 +1,5 @@
 use std::{fmt::Error, fs};
 
-pub fn clear_terminal() {
-    print!("\x1B[2J\x1B[1;1H");
-}
-
 pub fn create_dirs(path: &str) {
     let path_err = fs::create_dir_all(path);
     match path_err {
