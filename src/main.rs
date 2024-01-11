@@ -3,7 +3,7 @@ mod utils;
 use clap::Parser;
 use std::{
     env, fs,
-    io::{stdin, stdout, Read, Write},
+    io::{stdin, stdout, Write},
     process,
 };
 
@@ -30,6 +30,7 @@ struct Args {
 struct Recipient {
     filename: String,
     path: String,
+    full_path: String,
 }
 
 fn main() {
@@ -43,35 +44,42 @@ fn main() {
     });
     let input = Input { template, path };
     let recipient = mount_recipient(&input.path);
-    utils::create_dirs(&recipient.path);
-    let file_exists = utils::file_exists(&recipient.path);
-    match file_exists {
-        Err(_) => {
-            println!(
-                "The file already exists. If you continue, the existing file will be overwritten."
-            )
+    let file_exists = utils::file_exists(&recipient.full_path);
+    if file_exists {
+        let key_pressed = pause();
+        let proced = key_pressed.contains("y");
+        if proced {
+            utils::create_dirs(&recipient.path);
+            let all = format!("{}/{}", &recipient.path, &recipient.filename);
+            fs::write(all, "").unwrap();
+        } else {
+            process::exit(1);
         }
-        _ => pause(),
-    };
-    let all = format!("{}/{}.{}", &recipient.path, &recipient.filename, "ts");
+    }
+    utils::create_dirs(&recipient.path);
+    let all = format!("{}/{}", &recipient.path, &recipient.filename);
     fs::write(all, "").unwrap();
 }
 
-fn mount_recipient(path: &str) -> Recipient {
-    let mut split_path: Vec<&str> = path.split('/').collect();
-    let filename = split_path.pop().unwrap();
+fn mount_recipient(input: &str) -> Recipient {
+    let mut split_path: Vec<&str> = input.split('/').collect();
+    let file = split_path.pop().unwrap();
+    let filename = file.to_string() + ".ts";
+    let path = input.to_string().replace(file, "");
+
     Recipient {
-        filename: filename.to_string(),
-        path: path.to_string().replace(filename, ""),
+        filename,
+        path,
+        full_path: input.to_string() + ".ts",
     }
 }
 
-fn pause() {
+fn pause() -> String {
     let mut key_pressed = String::new();
     print!(
         "The file already exists. If you continue, the existing file will be overwritten. Are you sure to continue? [y/n] "
     );
     stdout().flush().unwrap();
     stdin().read_line(&mut key_pressed).unwrap();
-    print!("pressionou: {key_pressed}");
+    key_pressed
 }
