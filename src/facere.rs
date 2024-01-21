@@ -40,8 +40,11 @@ impl Template {
 }
 
 pub fn facere(recipient: &Recipient, template_name: &String) {
-    utils::create_dirs(&recipient.path);
-    let path = format!("{}/{}", &recipient.path, &recipient.filename);
+    let mut path = recipient.filename.to_owned();
+    if !recipient.path.is_empty() {
+        utils::create_dirs(&recipient.path);    
+        path = format!("{}/{}", &recipient.path, &recipient.filename);
+    }
     let content = Template::get_template_content(template_name.to_owned());
     fs::write(path, content).unwrap();
 }
