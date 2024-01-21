@@ -9,7 +9,7 @@ use clap::Parser;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
-struct Input {
+struct Cli {
     /// Template to create file
     #[arg(value_enum)]
     template: TemplateOptions,
@@ -18,10 +18,8 @@ struct Input {
     path: Option<String>,
 }
 
-
-
 fn main() {
-    let input = Input::parse();
+    let input = Cli::parse();
     let template = input.template;
     let path = input.path.unwrap_or_else(|| {
         eprintln!("Invalid path provided");
