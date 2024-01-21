@@ -2,6 +2,7 @@ mod utils;
 mod recipient;
 mod facere;
 
+use facere::TemplateOptions;
 use recipient::Recipient;
 use std::process;
 use clap::Parser;
@@ -9,16 +10,19 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Input {
-    template: Option<String>,
+    /// Template to create file
+    #[arg(value_enum)]
+    template: TemplateOptions,
+
+    /// Path to create file
     path: Option<String>,
 }
 
+
+
 fn main() {
     let input = Input::parse();
-    let template = input.template.unwrap_or_else(|| {
-        eprintln!("Invalid template provided");
-        process::exit(1);
-    });
+    let template = input.template;
     let path = input.path.unwrap_or_else(|| {
         eprintln!("Invalid path provided");
         process::exit(1);
