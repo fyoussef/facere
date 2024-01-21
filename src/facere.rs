@@ -6,9 +6,13 @@ use std::{fs, collections::HashMap, process};
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 pub enum TemplateOptions {
+    /// Template to create class
     Class,
-    Interface,
+    /// Template to create class
     Cl,
+    /// Template to create interfaces
+    Interface,
+    /// Template to create interfaces
     Itf
 }
 

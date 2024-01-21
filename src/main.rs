@@ -10,7 +10,7 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
-    /// Template to create file
+    /// Available templates to create file
     #[arg(value_enum)]
     template: TemplateOptions,
 
