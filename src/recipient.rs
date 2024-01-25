@@ -1,4 +1,3 @@
-
 #[derive(Debug)]
 pub struct Recipient {
     pub filename: String,
@@ -18,5 +17,26 @@ impl Recipient {
             path,
             full_path: input.to_string() + ".ts",
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Recipient;
+
+    #[test]
+    fn it_should_create_a_recipient_with_dir_and_file() {
+        let recipient = Recipient::new("my/path");
+        assert_eq!(recipient.filename, "path.ts");
+        assert_eq!(recipient.full_path, "my/path.ts");
+        assert_eq!(recipient.path, "my/");
+    }
+
+    #[test]
+    fn it_should_create_a_recipient_with_file() {
+        let recipient = Recipient::new("path");
+        assert_eq!(recipient.filename, "path.ts");
+        assert_eq!(recipient.full_path, "path.ts");
+        assert_eq!(recipient.path, "");
     }
 }

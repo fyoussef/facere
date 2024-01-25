@@ -70,3 +70,26 @@ pub fn facere(recipient: &Recipient, template_opt: &TemplateOptions) {
     let content = Template::get_template_content(template_opt.unwrap());
     fs::write(path, content).unwrap();
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_sholuld_return_template_class() {
+        let expect = TemplateOptions::unwrap(&self::TemplateOptions::Cl);
+        assert_eq!(expect, "class");
+    }
+
+    #[test]
+    fn it_sholuld_return_template_interface() {
+        let expect = TemplateOptions::unwrap(&self::TemplateOptions::Itf);
+        assert_eq!(expect, "interface");
+    }
+
+    #[test]
+    fn it_should_get_template() {
+        let expect = Template::get_template_content("class".to_string());
+        assert_eq!(expect, "export class ClassName {}");
+    }
+}
