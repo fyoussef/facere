@@ -6,5 +6,5 @@
 ### Download using CURL
 ```
 curl -LSfs https://japaric.github.io/trust/install.sh | \
-    sh -s -- --git japaric/cross
+    sh -s -- --git fyoussef/facere
 ```
