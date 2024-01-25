@@ -6,6 +6,7 @@ authors = ["fyoussef"]
 description = "Simple project to create typescript files with rust :)"
 keywords = ["typescript", "scaffold", "rust", "cli"]
 categories = ["command-line-utilities"]
+license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
