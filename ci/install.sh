@@ -37,9 +37,11 @@ main() {
                        | $sort --version-sort \
                        | tail -n1)
     curl -LSfs https://japaric.github.io/trust/install.sh | \
-        sh -s -- --git japaric/cross \
-                --tag $(curl -s https://api.github.com/repos/japaric/cross/releases/latest \
-                        | jq -r '.tag_name')
+        sh -s -- \
+           --force \
+           --git japaric/cross \
+           --tag $tag \
+           --target $target
 }
 
 main
