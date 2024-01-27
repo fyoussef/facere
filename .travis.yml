@@ -8,6 +8,7 @@ cache:
 matrix:
   include:
     - env:
+      - NAME=facere
       - TARGET=arm-unknown-linux-gnueabihf
       - LINKER=arm-linux-gnueabihf-gcc
       - PACKAGE=$NAME-rpi2.tar.gz
@@ -18,6 +19,7 @@ matrix:
           - libc6-armhf-cross
           - libc6-dev-armhf-cross
     - env:
+      - NAME=facere
       - TARGET=armv7-unknown-linux-gnueabihf
       - LINKER=arm-linux-gnueabihf-gcc
       - PACKAGE=$NAME-rpi3.tar.gz
@@ -25,6 +27,7 @@ matrix:
       apt:
         packages: *armhf
     - env:
+      - NAME=facere
       - TARGET=i686-unknown-linux-gnu
       - PACKAGE=$NAME-i686.tar.gz
     - addons:
@@ -32,6 +35,7 @@ matrix:
         packages:
           - gcc-multilib
     - env:
+      - NAME=facere
       - TARGET=x86_64-unknown-linux-gnu
       - PACKAGE=$NAME-x86_64.tar.gz
 
