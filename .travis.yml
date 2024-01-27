@@ -7,37 +7,22 @@ cache:
   - apt
 matrix:
   include:
-    - env:
-      - NAME=facere
-      - TARGET=arm-unknown-linux-gnueabihf
-      - LINKER=arm-linux-gnueabihf-gcc
-      - PACKAGE=$NAME-rpi2.tar.gz
-    addons:
-        apt:
-          packages: &armhf
-            - gcc-arm-linux-gnueabihf
-            - libc6-armhf-cross
-            - libc6-dev-armhf-cross
-    - env:
-      - NAME=facere
-      - TARGET=armv7-unknown-linux-gnueabihf
-      - LINKER=arm-linux-gnueabihf-gcc
-      - PACKAGE=$NAME-rpi3.tar.gz
-    addons:
-      apt:
-        packages: *armhf
-    - env:
-      - NAME=facere
-      - TARGET=i686-unknown-linux-gnu
-      - PACKAGE=$NAME-i686.tar.gz
-    addons:
-      apt:
-        packages:
-          - gcc-multilib
-    - env:
-      - NAME=facere
-      - TARGET=x86_64-unknown-linux-gnu
-      - PACKAGE=$NAME-x86_64.tar.gz
+    # Linux
+    - env: TARGET=aarch64-unknown-linux-gnu
+    - env: TARGET=arm-unknown-linux-gnueabi
+    - env: TARGET=armv7-unknown-linux-gnueabihf
+    - env: TARGET=i686-unknown-linux-gnu
+    - env: TARGET=i686-unknown-linux-musl
+    - env: TARGET=mips-unknown-linux-gnu
+    - env: TARGET=mips64-unknown-linux-gnuabi64
+    - env: TARGET=mips64el-unknown-linux-gnuabi64
+    - env: TARGET=mipsel-unknown-linux-gnu
+    - env: TARGET=powerpc-unknown-linux-gnu
+    - env: TARGET=powerpc64-unknown-linux-gnu
+    - env: TARGET=powerpc64le-unknown-linux-gnu
+    - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
+    - env: TARGET=x86_64-unknown-linux-gnu
+    - env: TARGET=x86_64-unknown-linux-musl
 
 install:
   - export PATH="$PATH:$HOME/.cargo/bin"
@@ -61,15 +46,13 @@ before_deploy:
   - tar -czf $PACKAGE -C target/$TARGET/release/ $NAME
 
 deploy:
-deploy:
   provider: releases
   api_key:
-    secure: d9bgrslzLJGsNOauUlpqj+L8iEB4fc1NyDOTT1iqSMZP9k/+xDCPUWyVveYB3HdIWyIgt9wEMeuKurBvbzHTxpJbWePOm8eqlN5Utigq379o/tQixZVtlmXTct3DzTPYDIfdKJRe5wS83nB4Jjs6U7l4To+SQGmFUQciBfskJNDDikcxr1EqFkKDsMN89GSnzEMhEdLhuXDaDk1HyE9hQOCRl7S1ADwcsfPffNBDUaCNJH53OB8mL5XQqQx6agWSE1SrIeJYXULwAnZzp1WA1U++pcuehEW+QnvIR3RyEie3+OGfJKFbXhWlHtLUV1WHX0tTrUZB6/UsJ1bqrCfyzrWVcb4OZVd5aTD6vOsB6q4qaT4H9Y7A3+woJqJwfnvifJB+fOAV7VABBBA2Kf8YRyqWgd2Sj9qc17WHJpoOVrdBemBzth/OE2rJtp7zGPnaIIVNDdT7Mn7fXptkDszfrCNEkWS+zSQANvCP0EntCTuuC766R+RzQbSbRKLJvB2ubAQzUIaeS9LUatn4eiZUWPGgyvd4aHbTUejiC5CCj9cfL9uDJiDsEn4Oq7olv3xTNriLwjw7HFB2Os0Uq/6Y7qO0aJeIwliVFwK6XxBdFnAY5fXUWN7Ccen8N6PqLrziLT+A6hK60mfP1yAKIeSItAb3a29ae7BvlllKtr510fc=
+    secure: KqFzLfzB3Ym4HH8X5Uf9kAuhOpwIvgLOUzb9qRNpxARZtOvz0TAJfjCjcJasLyjPXfg2suVNNiqrjz8Q7kQfx6/fPwTBxcBge9tVG5IEKr6Adl5YIVzlj374OsXP8vBVQcgC20cfEAqsX3KS113PMSblvMtFeLRLZgRHopajnb3+ymxO+vZbe9auaecbhZECiV2SLWSaZqnfV9iXgYMNfjz0PH7BPJlNSwshP7hWBMjd3OSd8ZDkn1XMOgsb7AcwlHSvtKSdkEPYQI0hRbTFri1BjhFcMnHLkx5ZaPRZ0FR1xCIDNAtr3Zp1OgC5BEvnXFWMHCL/dsGruulY+Lp/vObQ3X5pkDRB6PDNXQkCEeBntqHdxgRa3cMX3PhqNLgnnOZsusao8lg6m/L2v3vuxwvzm0ACt3tVhYxH5Xl6mBM+b/JK8t6tR0P3EcwxaUAg95GJcyVTNpaW1ioy2zkTVddriKPeMJ+tR6dp9rEgSNg1D2blRxjgTIWFay3iAhI7WxjS5re2HV7tqsPiTXeKZbh9YSCXWrQxU8LnYvcnYirE1Yfc68r3IIStstJ9kmStcCBCxPol6QP8/dguszFdpGBOIfzqUNID6chg+W6nbyBLnrqJ9+H+3AEXqj0zVjTIVN8eIzcyfhmdd9w26YN0Xkz3dPsvn+ND4nTtelzPmFA=
   file: ${PACKAGE}
   skip_cleanup: true
   on:
     tags: true
-    condition: $TRAVIS_RUST_VERSION = stable
     repo: facere
 
 branches:
