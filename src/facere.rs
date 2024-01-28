@@ -2,7 +2,7 @@ use clap::ValueEnum;
 
 use crate::{utils, recipient::Recipient};
 
-use std::{fs, collections::HashMap, process};
+use std::{collections::HashMap, fs, process};
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 pub enum TemplateOptions {
@@ -35,15 +35,15 @@ impl Template {
         Template { name }
     }
 
-    pub fn get_template_content(name: String) -> String {
+    pub fn get_template_content(name: String, input: String) -> String {
         let templs = HashMap::from([
             (
                 Template::new("class".to_string()), 
-                "export class ClassName {}".to_string()
+                format!("export class {input} {{}}").to_string()
             ),
             (
                 Template::new("interface".to_string()), 
-                "export interface IInterfaceName {}".to_string()
+                format!("export interface I{input} {{}}").to_string()
             )
         ]);
         let mut result = String::new();
@@ -67,8 +67,23 @@ pub fn facere(recipient: &Recipient, template_opt: &TemplateOptions) {
         utils::create_dirs(&recipient.path);    
         path = format!("{}/{}", &recipient.path, &recipient.filename);
     }
-    let content = Template::get_template_content(template_opt.unwrap());
+    let input = format_input(recipient);
+    let content = Template::get_template_content(template_opt.unwrap(), input);
     fs::write(path, content).unwrap();
+}
+
+fn format_input(recipient: &Recipient) -> String {
+    let filename_without_ext = recipient.filename.replace(".ts", "");
+    let splited: Vec<String> = filename_without_ext.trim().split("-").map(|x| x.to_string()).collect();
+    let mut result = String::new();
+    for split in splited {
+        let mut chunk: Vec<String> = split.split("").filter(|x| !x.is_empty()).map(|x| x.to_string()).collect();
+        chunk[0] = chunk[0].to_uppercase();
+        println!("{:?}", chunk[0]);
+        let joined = chunk.join("");
+        result += &joined;
+    }
+    result
 }
 
 #[cfg(test)]
@@ -89,7 +104,7 @@ mod tests {
 
     #[test]
     fn it_should_get_template() {
-        let expect = Template::get_template_content("class".to_string());
-        assert_eq!(expect, "export class ClassName {}");
+        let expect = Template::get_template_content("class".to_string(), "test".to_string());
+        assert_eq!(expect, "export class test {}");
     }
 }
