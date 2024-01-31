@@ -13,7 +13,11 @@ pub enum TemplateOptions {
     /// Template to create interfaces
     Interface,
     /// Template to create interfaces
-    Itf
+    Itf,
+    /// Template to create use case class
+    UseCase,
+    /// Template to create use case class
+    Uc
 }
 
 impl TemplateOptions {
@@ -21,6 +25,7 @@ impl TemplateOptions {
         match &self {
             TemplateOptions::Cl | TemplateOptions::Class => "class".to_string(),
             TemplateOptions::Itf | TemplateOptions::Interface => "interface".to_string(),
+            TemplateOptions::Uc | TemplateOptions::UseCase => "usecase".to_string(),
         }
     }
 }
@@ -28,6 +33,22 @@ impl TemplateOptions {
 #[derive(Hash, Eq, PartialEq, Debug)]
 pub struct Template {
     pub name: String
+}
+
+pub enum TemplateContent {
+    Constructor,
+    Tabs,
+    CurlyBrackets,
+}
+
+impl TemplateContent {
+    pub fn get(&self) -> String{
+        match &self {
+            TemplateContent::Constructor => "constructor() {}".to_string(),
+            TemplateContent::Tabs => "  ".to_string(),
+            TemplateContent::CurlyBrackets => "{}".to_string(),
+        }
+    }
 }
 
 impl Template {
@@ -39,11 +60,22 @@ impl Template {
         let templs = HashMap::from([
             (
                 Template::new("class".to_string()), 
-                format!("export class {input} {{}}").to_string()
+                format!("export class {} {{\n{}{}\n}}", input, TemplateContent::Tabs.get(), TemplateContent::Constructor.get()).to_string()
             ),
             (
                 Template::new("interface".to_string()), 
-                format!("export interface I{input} {{}}").to_string()
+                format!("export interface I{} {}", input, TemplateContent::CurlyBrackets.get()).to_string()
+            ),
+            (
+                Template::new("usecase".to_string()), 
+                format!(
+                    "export class {} {{\n{}{}\n\n{}execute() {}\n}}", 
+                    input, 
+                    TemplateContent::Tabs.get(), 
+                    TemplateContent::Constructor.get(), 
+                    TemplateContent::Tabs.get(),
+                    TemplateContent::CurlyBrackets.get()
+                ).to_string()
             )
         ]);
         let mut result = String::new();
@@ -79,7 +111,6 @@ fn format_input(recipient: &Recipient) -> String {
     for split in splited {
         let mut chunk: Vec<String> = split.split("").filter(|x| !x.is_empty()).map(|x| x.to_string()).collect();
         chunk[0] = chunk[0].to_uppercase();
-        println!("{:?}", chunk[0]);
         let joined = chunk.join("");
         result += &joined;
     }
