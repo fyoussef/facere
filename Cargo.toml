@@ -1,6 +1,6 @@
 [package]
 name = "facere"
-version = "0.1.5"
+version = "0.1.8"
 edition = "2021"
 authors = ["fyoussef"]
 description = "Simple project to create typescript files with rust :)"
