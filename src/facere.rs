@@ -107,4 +107,19 @@ mod tests {
         let expect = Template::get_template_content("class".to_string(), "test".to_string());
         assert_eq!(expect, "export class test {}");
     }
+
+    #[test]
+    fn it_should_capitalize_string() {
+        let input = Recipient::new("test");
+        let expect = format_input(&input);
+        assert_eq!(expect, "Test");
+    }
+
+    #[test]
+    fn it_should_capitalize_string_with_hifens() {
+        let input = Recipient::new("new-test");
+        let expect = format_input(&input);
+        assert_eq!(expect, "NewTest");
+    }
+
 }
