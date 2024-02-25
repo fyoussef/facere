@@ -21,13 +21,13 @@ struct Cli {
 fn main() {
     let input = Cli::parse();
     let template = input.template;
-    let path = input.path.unwrap_or_else(|| {
+    let input_path = input.path.unwrap_or_else(|| {
         eprintln!("Invalid path provided");
         process::exit(1);
     });
-    let recipient = Recipient::new(&path);
-    let file_exists = utils::file_exists(&recipient.full_path);
-    if file_exists {
+    let recipient = Recipient::new(&input_path);
+    let path_exists = utils::file_exists(&recipient.full_path);
+    if path_exists {
         let can_continue = utils::can_continue();
         if can_continue {
             facere::facere(&recipient, &template);

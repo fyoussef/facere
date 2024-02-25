@@ -35,22 +35,6 @@ pub struct Template {
     pub name: String
 }
 
-pub enum TemplateContent {
-    Constructor,
-    Tabs,
-    CurlyBrackets,
-}
-
-impl TemplateContent {
-    pub fn get(&self) -> String{
-        match &self {
-            TemplateContent::Constructor => "constructor() {}".to_string(),
-            TemplateContent::Tabs => "  ".to_string(),
-            TemplateContent::CurlyBrackets => "{}".to_string(),
-        }
-    }
-}
-
 impl Template {
     fn new(name: String) -> Template {
         Template { name }
@@ -60,22 +44,15 @@ impl Template {
         let templs = HashMap::from([
             (
                 Template::new("class".to_string()), 
-                format!("export class {} {{\n{}{}\n}}", input, TemplateContent::Tabs.get(), TemplateContent::Constructor.get()).to_string()
+                format!("export class {} {{\n  constructor() {{}} \n}}", input).to_string()
             ),
             (
                 Template::new("interface".to_string()), 
-                format!("export interface I{} {}", input, TemplateContent::CurlyBrackets.get()).to_string()
+                format!("export interface I{} {{}}", input).to_string()
             ),
             (
                 Template::new("usecase".to_string()), 
-                format!(
-                    "export class {} {{\n{}{}\n\n{}execute() {}\n}}", 
-                    input, 
-                    TemplateContent::Tabs.get(), 
-                    TemplateContent::Constructor.get(), 
-                    TemplateContent::Tabs.get(),
-                    TemplateContent::CurlyBrackets.get()
-                ).to_string()
+                format!("export class {} {{\n  constructor() {{}} \n\n  execute() {{}} \n}}", input).to_string()
             )
         ]);
         let mut result = String::new();
@@ -95,21 +72,22 @@ impl Template {
 
 pub fn facere(recipient: &Recipient, template_opt: &TemplateOptions) {
     let mut path = recipient.filename.to_owned();
-    if !recipient.path.is_empty() {
-        utils::create_dirs(&recipient.path);    
-        path = format!("{}/{}", &recipient.path, &recipient.filename);
+    let has_directories = recipient.directories.is_empty();
+    if !has_directories {
+        utils::create_dirs(&recipient.directories);
+        path = format!("{}/{}", &recipient.directories, &recipient.filename);
     }
-    let input = format_input(recipient);
-    let content = Template::get_template_content(template_opt.unwrap(), input);
+    let file_name = format_file_name(recipient);
+    let content = Template::get_template_content(template_opt.unwrap(), file_name);
     fs::write(path, content).unwrap();
 }
 
-fn format_input(recipient: &Recipient) -> String {
+fn format_file_name(recipient: &Recipient) -> String {
     let filename_without_ext = recipient.filename.replace(".ts", "");
     let splited: Vec<String> = filename_without_ext.trim().split("-").map(|x| x.to_string()).collect();
     let mut result = String::new();
     for split in splited {
-        let mut chunk: Vec<String> = split.split("").filter(|x| !x.is_empty()).map(|x| x.to_string()).collect();
+        let mut chunk: Vec<String> = split.chars().filter(|x| !x.is_ascii_whitespace()).map(|x| x.to_string()).collect();
         chunk[0] = chunk[0].to_uppercase();
         let joined = chunk.join("");
         result += &joined;
@@ -136,20 +114,20 @@ mod tests {
     #[test]
     fn it_should_get_template() {
         let expect = Template::get_template_content("class".to_string(), "test".to_string());
-        assert_eq!(expect, "export class test {}");
+        assert_eq!(expect, format!("export class test {{\n  constructor() {{}} \n}}").to_string());
     }
 
     #[test]
     fn it_should_capitalize_string() {
         let input = Recipient::new("test");
-        let expect = format_input(&input);
+        let expect = format_file_name(&input);
         assert_eq!(expect, "Test");
     }
 
     #[test]
     fn it_should_capitalize_string_with_hifens() {
         let input = Recipient::new("new-test");
-        let expect = format_input(&input);
+        let expect = format_file_name(&input);
         assert_eq!(expect, "NewTest");
     }
 
