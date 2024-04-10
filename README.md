@@ -32,7 +32,7 @@ After installing facere, follow the steps below to create your TypeScript files.
 Create typescript file using class template:
 
 ```sh
-facere cl test
+facere cl my/file
 ```
 
 When creating the file, facere will check if the `src` directory exists in the directory where you are running the command. Otherwise, it will create the file and directories inside the `src` folder.
@@ -40,5 +40,5 @@ When creating the file, facere will check if the `src` directory exists in the d
 To see all available templates, run the command below.
 
 ```sh
-facere cl test
+facere -h
 ```
