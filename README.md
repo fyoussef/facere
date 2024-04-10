@@ -7,13 +7,13 @@
 
 Install the Facere tool on your system using command below.
 
-Shell (Linux):
+<b>Shell (Linux):</b>
 
 ```sh
 curl -O -L https://github.com/fyoussef/facere/releases/tag/v0.1.8/facere-x86_64-unknown-linux-gnu.tar.gz
 ```
 
-Shell (MacOS):
+<b>Shell (MacOS):</b>
 
 ```sh
 curl -O -L https://github.com/fyoussef/facere/releases/tag/v0.1.8/facere-aarch64-apple-darwin.tar.gz
