@@ -24,3 +24,21 @@ curl -O -L https://github.com/fyoussef/facere/releases/tag/v0.1.8/facere-aarch64
 
 In the case of other systems, I recommend that you download directly from the following address.
 See if your system is in the list and download it <a href="https://github.com/fyoussef/facere/releases/tag/v0.1.8">here</a>.
+
+## Create Typescript files
+
+After installing facere, follow the steps below to create your TypeScript files.
+
+Create typescript file using class template:
+
+```sh
+facere cl test
+```
+
+When creating the file, facere will check if the `src` directory exists in the directory where you are running the command. Otherwise, it will create the file and directories inside the `src` folder.
+
+To see all available templates, run the command below.
+
+```sh
+facere cl test
+```
