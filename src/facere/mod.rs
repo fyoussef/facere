@@ -1,8 +1,7 @@
 use clap::ValueEnum;
-
-use crate::{utils, recipient::Recipient};
-
 use std::{collections::HashMap, fs, process};
+
+use crate::{recipient::Recipient, utils::create_dirs};
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 pub enum TemplateOptions {
@@ -74,7 +73,7 @@ pub fn facere(recipient: &Recipient, template_opt: &TemplateOptions) {
     let mut path = recipient.filename.to_owned();
     let has_directories = recipient.directories.is_empty();
     if !has_directories {
-        utils::create_dirs(&recipient.directories);
+        create_dirs(&recipient.directories);
         path = format!("{}/{}", &recipient.directories, &recipient.filename);
     }
     let file_name = format_file_name(recipient);

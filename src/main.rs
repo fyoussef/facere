@@ -2,10 +2,11 @@ mod utils;
 mod recipient;
 mod facere;
 
-use facere::TemplateOptions;
-use recipient::Recipient;
 use std::process;
 use clap::Parser;
+use facere::{TemplateOptions, facere};
+use recipient::Recipient;
+use utils::{can_continue, file_exists};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -26,14 +27,14 @@ fn main() {
         process::exit(1);
     });
     let recipient = Recipient::new(&input_path);
-    let path_exists = utils::file_exists(&recipient.full_path);
+    let path_exists = file_exists(&recipient.full_path);
     if path_exists {
-        let can_continue = utils::can_continue();
+        let can_continue = can_continue();
         if can_continue {
-            facere::facere(&recipient, &template);
+            facere(&recipient, &template);
         } else {
             process::exit(1);
         }
     }
-    facere::facere(&recipient, &template);
+    facere(&recipient, &template);
 }
