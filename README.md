@@ -1,7 +1,10 @@
-# `Facere`
+# Facere
 
-> Facere is a simple project to automatically generate files for projects that use TypeScript.
-> It is a simple tool, but designed to bring ease and efficiency to developers in their day-to-day projects.
+[![](https://img.shields.io/crates/v/facere.svg)](https://crates.io/crates/facere)
+
+Facere is a simple project to automatically generate files for projects that use TypeScript.
+It is a simple tool, but designed to bring ease and efficiency to developers in their day-to-day projects.
+It's built using [Clap](https://crates.io/crates/clap) and [Rust](https://www.rust-lang.org/).
 
 ## Installation
 
