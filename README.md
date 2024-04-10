@@ -20,8 +20,8 @@ curl -O -L https://github.com/fyoussef/facere/releases/tag/v0.1.8/facere-aarch64
 ```
 
 In the case of other systems, I recommend that you download directly from the following address.
-See if your system is in the list and download it.
+See if your system is in the list and <a href="https://github.com/fyoussef/facere/releases/tag/v0.1.8">download</a> it.
 
-```
-https://github.com/fyoussef/facere/releases/tag/v0.1.8
+```html
+<a href="https://github.com/fyoussef/facere/releases/tag/v0.1.8">https://github.com/fyoussef/facere/releases/tag/v0.1.8</a>
 ```
